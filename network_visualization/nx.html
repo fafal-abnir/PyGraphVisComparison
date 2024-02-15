@@ -1,0 +1,167 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 1000px;
+                 height: 500px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+             #config {
+                 float: left;
+                 width: 400px;
+                 height: 600px;
+             }
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+            <div id="config"></div>
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"betweenness_centrality": 0.012183235867446393, "color": "rgb(254,229,218)", "f1": 0.5023775128858529, "f2": 60, "f3": 1, "id": 0, "label": "525b8d1c-13a6-46d3-9c81-f86ac8e316b5", "node-degree": 6, "node_identifier": "525b8d1c-13a6-46d3-9c81-f86ac8e316b5", "node_type": 1, "shape": "dot", "size": 10, "title": "Node: 525b8d1c-13a6-46d3-9c81-f86ac8e316b5\nNode Features:\nfeature 1: 0.5023775128858529\nfeature 2: 60\nfeature 3: 1\nBetweenness Centrality: 0.012183235867446393\nDegree: 6", "value": 0.012183235867446393}, {"betweenness_centrality": 0.13011695906432746, "color": "rgb(103,0,12)", "f1": 0.5956135266911974, "f2": 78, "f3": 0, "id": 1, "label": "ef66e834-6b4a-47e5-b9cc-a6fd86e01e1a", "node-degree": 17, "node_identifier": "ef66e834-6b4a-47e5-b9cc-a6fd86e01e1a", "node_type": 1, "shape": "dot", "size": 10, "title": "Node: ef66e834-6b4a-47e5-b9cc-a6fd86e01e1a\nNode Features:\nfeature 1: 0.5956135266911974\nfeature 2: 78\nfeature 3: 0\nBetweenness Centrality: 0.13011695906432746\nDegree: 17", "value": 0.13011695906432746}, {"betweenness_centrality": 0.0, "color": "rgb(255,245,240)", "f1": 0.3572999250216653, "f2": 96, "f3": 0, "id": 2, "label": "c0b93973-f767-4900-bb48-116bb52de717", "node-degree": 4, "node_identifier": "c0b93973-f767-4900-bb48-116bb52de717", "node_type": 2, "shape": "dot", "size": 10, "title": "Node: c0b93973-f767-4900-bb48-116bb52de717\nNode Features:\nfeature 1: 0.3572999250216653\nfeature 2: 96\nfeature 3: 0\nBetweenness Centrality: 0.0\nDegree: 4", "value": 0.0}, {"betweenness_centrality": 0.0, "color": "rgb(255,245,240)", "f1": 0.7232016868762665, "f2": 84, "f3": 1, "id": 3, "label": "86f39c78-79d2-4c63-b19c-c5cecb7d93df", "node-degree": 6, "node_identifier": "86f39c78-79d2-4c63-b19c-c5cecb7d93df", "node_type": 2, "shape": "dot", "size": 10, "title": "Node: 86f39c78-79d2-4c63-b19c-c5cecb7d93df\nNode Features:\nfeature 1: 0.7232016868762665\nfeature 2: 84\nfeature 3: 1\nBetweenness Centrality: 0.0\nDegree: 6", "value": 0.0}, {"betweenness_centrality": 0.10428849902534114, "color": "rgb(186,20,25)", "f1": 0.3395835665510387, "f2": 14, "f3": 0, "id": 4, "label": "37248df1-919b-4a4c-826b-c5e1ca83aa43", "node-degree": 15, "node_identifier": "37248df1-919b-4a4c-826b-c5e1ca83aa43", "node_type": 2, "shape": "dot", "size": 10, "title": "Node: 37248df1-919b-4a4c-826b-c5e1ca83aa43\nNode Features:\nfeature 1: 0.3395835665510387\nfeature 2: 14\nfeature 3: 0\nBetweenness Centrality: 0.10428849902534114\nDegree: 15", "value": 0.10428849902534114}, {"betweenness_centrality": 0.026803118908382065, "color": "rgb(252,200,179)", "f1": 0.947742764646328, "f2": 76, "f3": 1, "id": 8, "label": "6b3e0db3-66ef-4e26-921d-a8e2dd72373a", "node-degree": 6, "node_identifier": "6b3e0db3-66ef-4e26-921d-a8e2dd72373a", "node_type": 1, "shape": "dot", "size": 10, "title": "Node: 6b3e0db3-66ef-4e26-921d-a8e2dd72373a\nNode Features:\nfeature 1: 0.947742764646328\nfeature 2: 76\nfeature 3: 1\nBetweenness Centrality: 0.026803118908382065\nDegree: 6", "value": 0.026803118908382065}, {"betweenness_centrality": 0.0, "color": "rgb(255,245,240)", "f1": 0.26048875876579847, "f2": 98, "f3": 1, "id": 12, "label": "5edf9ad5-ebe1-475a-b38d-acee3142cef6", "node-degree": 2, "node_identifier": "5edf9ad5-ebe1-475a-b38d-acee3142cef6", "node_type": 1, "shape": "dot", "size": 10, "title": "Node: 5edf9ad5-ebe1-475a-b38d-acee3142cef6\nNode Features:\nfeature 1: 0.26048875876579847\nfeature 2: 98\nfeature 3: 1\nBetweenness Centrality: 0.0\nDegree: 2", "value": 0.0}, {"betweenness_centrality": 0.0, "color": "rgb(255,245,240)", "f1": 0.3017659674616099, "f2": 37, "f3": 0, "id": 5, "label": "5de9d1f1-b773-4a62-a39e-84c7fac23124", "node-degree": 3, "node_identifier": "5de9d1f1-b773-4a62-a39e-84c7fac23124", "node_type": 1, "shape": "dot", "size": 10, "title": "Node: 5de9d1f1-b773-4a62-a39e-84c7fac23124\nNode Features:\nfeature 1: 0.3017659674616099\nfeature 2: 37\nfeature 3: 0\nBetweenness Centrality: 0.0\nDegree: 3", "value": 0.0}, {"betweenness_centrality": 0.027777777777777776, "color": "rgb(252,198,175)", "f1": 0.5822946693126755, "f2": 83, "f3": 1, "id": 9, "label": "98249580-e3c8-4941-822a-c7d3ac5bf672", "node-degree": 6, "node_identifier": "98249580-e3c8-4941-822a-c7d3ac5bf672", "node_type": 2, "shape": "dot", "size": 10, "title": "Node: 98249580-e3c8-4941-822a-c7d3ac5bf672\nNode Features:\nfeature 1: 0.5822946693126755\nfeature 2: 83\nfeature 3: 1\nBetweenness Centrality: 0.027777777777777776\nDegree: 6", "value": 0.027777777777777776}, {"betweenness_centrality": 0.0, "color": "rgb(255,245,240)", "f1": 0.9924745459573471, "f2": 80, "f3": 1, "id": 6, "label": "5b9f51d8-1dc3-4945-a414-392d0305296a", "node-degree": 2, "node_identifier": "5b9f51d8-1dc3-4945-a414-392d0305296a", "node_type": 2, "shape": "dot", "size": 10, "title": "Node: 5b9f51d8-1dc3-4945-a414-392d0305296a\nNode Features:\nfeature 1: 0.9924745459573471\nfeature 2: 80\nfeature 3: 1\nBetweenness Centrality: 0.0\nDegree: 2", "value": 0.0}, {"betweenness_centrality": 0.0, "color": "rgb(255,245,240)", "f1": 0.02340412247323942, "f2": 26, "f3": 0, "id": 7, "label": "dcb30b81-f747-4858-aef9-69e06839e8c7", "node-degree": 2, "node_identifier": "dcb30b81-f747-4858-aef9-69e06839e8c7", "node_type": 1, "shape": "dot", "size": 10, "title": "Node: dcb30b81-f747-4858-aef9-69e06839e8c7\nNode Features:\nfeature 1: 0.02340412247323942\nfeature 2: 26\nfeature 3: 0\nBetweenness Centrality: 0.0\nDegree: 2", "value": 0.0}, {"betweenness_centrality": 0.0, "color": "rgb(255,245,240)", "f1": 0.7152937647243305, "f2": 98, "f3": 0, "id": 10, "label": "dede3320-c3a7-4450-83d5-42dbc03fb1c7", "node-degree": 1, "node_identifier": "dede3320-c3a7-4450-83d5-42dbc03fb1c7", "node_type": 0, "shape": "dot", "size": 10, "title": "Node: dede3320-c3a7-4450-83d5-42dbc03fb1c7\nNode Features:\nfeature 1: 0.7152937647243305\nfeature 2: 98\nfeature 3: 0\nBetweenness Centrality: 0.0\nDegree: 1", "value": 0.0}, {"betweenness_centrality": 0.0, "color": "rgb(255,245,240)", "f1": 0.8754854314842754, "f2": 40, "f3": 1, "id": 11, "label": "afa09515-c380-4b16-b982-30ab3f860427", "node-degree": 1, "node_identifier": "afa09515-c380-4b16-b982-30ab3f860427", "node_type": 0, "shape": "dot", "size": 10, "title": "Node: afa09515-c380-4b16-b982-30ab3f860427\nNode Features:\nfeature 1: 0.8754854314842754\nfeature 2: 40\nfeature 3: 1\nBetweenness Centrality: 0.0\nDegree: 1", "value": 0.0}, {"betweenness_centrality": 0.0, "color": "rgb(255,245,240)", "f1": 0.1921137717353063, "f2": 92, "f3": 0, "id": 13, "label": "69a216e6-220f-4228-b41b-e388c5950692", "node-degree": 1, "node_identifier": "69a216e6-220f-4228-b41b-e388c5950692", "node_type": 1, "shape": "dot", "size": 10, "title": "Node: 69a216e6-220f-4228-b41b-e388c5950692\nNode Features:\nfeature 1: 0.1921137717353063\nfeature 2: 92\nfeature 3: 0\nBetweenness Centrality: 0.0\nDegree: 1", "value": 0.0}, {"betweenness_centrality": 0.0, "color": "rgb(255,245,240)", "f1": 0.816058461833584, "f2": 38, "f3": 1, "id": 14, "label": "60815f93-ce37-4ab6-b5ae-5e7764d74e1b", "node-degree": 1, "node_identifier": "60815f93-ce37-4ab6-b5ae-5e7764d74e1b", "node_type": 1, "shape": "dot", "size": 10, "title": "Node: 60815f93-ce37-4ab6-b5ae-5e7764d74e1b\nNode Features:\nfeature 1: 0.816058461833584\nfeature 2: 38\nfeature 3: 1\nBetweenness Centrality: 0.0\nDegree: 1", "value": 0.0}, {"betweenness_centrality": 0.0, "color": "rgb(255,245,240)", "f1": 0.5181639715884873, "f2": 82, "f3": 1, "id": 15, "label": "f3c30aac-aa41-4f4a-b4a8-e30ed102c3ac", "node-degree": 1, "node_identifier": "f3c30aac-aa41-4f4a-b4a8-e30ed102c3ac", "node_type": 0, "shape": "dot", "size": 10, "title": "Node: f3c30aac-aa41-4f4a-b4a8-e30ed102c3ac\nNode Features:\nfeature 1: 0.5181639715884873\nfeature 2: 82\nfeature 3: 1\nBetweenness Centrality: 0.0\nDegree: 1", "value": 0.0}, {"betweenness_centrality": 0.0, "color": "rgb(255,245,240)", "f1": 0.393394793803881, "f2": 96, "f3": 0, "id": 16, "label": "17d87591-162f-459a-8f24-b88a9d2cc109", "node-degree": 1, "node_identifier": "17d87591-162f-459a-8f24-b88a9d2cc109", "node_type": 1, "shape": "dot", "size": 10, "title": "Node: 17d87591-162f-459a-8f24-b88a9d2cc109\nNode Features:\nfeature 1: 0.393394793803881\nfeature 2: 96\nfeature 3: 0\nBetweenness Centrality: 0.0\nDegree: 1", "value": 0.0}, {"betweenness_centrality": 0.0, "color": "rgb(255,245,240)", "f1": 0.6424301194641074, "f2": 97, "f3": 1, "id": 17, "label": "9d33724e-31e7-4d22-94e0-60d64f839a32", "node-degree": 1, "node_identifier": "9d33724e-31e7-4d22-94e0-60d64f839a32", "node_type": 0, "shape": "dot", "size": 10, "title": "Node: 9d33724e-31e7-4d22-94e0-60d64f839a32\nNode Features:\nfeature 1: 0.6424301194641074\nfeature 2: 97\nfeature 3: 1\nBetweenness Centrality: 0.0\nDegree: 1", "value": 0.0}, {"betweenness_centrality": 0.0, "color": "rgb(255,245,240)", "f1": 0.24948433412327098, "f2": 60, "f3": 1, "id": 18, "label": "5f90ce3a-758e-47c5-a4be-07ec751f59f4", "node-degree": 1, "node_identifier": "5f90ce3a-758e-47c5-a4be-07ec751f59f4", "node_type": 0, "shape": "dot", "size": 10, "title": "Node: 5f90ce3a-758e-47c5-a4be-07ec751f59f4\nNode Features:\nfeature 1: 0.24948433412327098\nfeature 2: 60\nfeature 3: 1\nBetweenness Centrality: 0.0\nDegree: 1", "value": 0.0}, {"betweenness_centrality": 0.0, "color": "rgb(255,245,240)", "f1": 0.9558038094706086, "f2": 22, "f3": 0, "id": 19, "label": "f110fe6c-5752-4133-9f5e-962e5593c29b", "node-degree": 1, "node_identifier": "f110fe6c-5752-4133-9f5e-962e5593c29b", "node_type": 0, "shape": "dot", "size": 10, "title": "Node: f110fe6c-5752-4133-9f5e-962e5593c29b\nNode Features:\nfeature 1: 0.9558038094706086\nfeature 2: 22\nfeature 3: 0\nBetweenness Centrality: 0.0\nDegree: 1", "value": 0.0}]);
+                  edges = new vis.DataSet([{"color": "rgb(252,177,150)", "f1": 0.286386790235011, "f2": 36, "from": 0, "label": 1, "title": "Edge: 525b8d1c-13a6-46d3-9c81-f86ac8e316b5 -\u003e ef66e834-6b4a-47e5-b9cc-a6fd86e01e1a\nEdge Features:\nfeature 1: 0.286386790235011\nfeature 2: 36", "to": 1, "value": 0.286386790235011, "width": 1}, {"color": "rgb(252,159,129)", "f1": 0.3404600962342095, "f2": 52, "from": 1, "label": 1, "title": "Edge: ef66e834-6b4a-47e5-b9cc-a6fd86e01e1a -\u003e c0b93973-f767-4900-bb48-116bb52de717\nEdge Features:\nfeature 1: 0.3404600962342095\nfeature 2: 52", "to": 2, "value": 0.3404600962342095, "width": 1}, {"color": "rgb(251,122,90)", "f1": 0.44823814640846027, "f2": 78, "from": 1, "label": 1, "title": "Edge: ef66e834-6b4a-47e5-b9cc-a6fd86e01e1a -\u003e 86f39c78-79d2-4c63-b19c-c5cecb7d93df\nEdge Features:\nfeature 1: 0.44823814640846027\nfeature 2: 78", "to": 3, "value": 0.44823814640846027, "width": 1}, {"color": "rgb(252,190,165)", "f1": 0.24791103631647804, "f2": 38, "from": 1, "label": 1, "title": "Edge: ef66e834-6b4a-47e5-b9cc-a6fd86e01e1a -\u003e ef66e834-6b4a-47e5-b9cc-a6fd86e01e1a\nEdge Features:\nfeature 1: 0.24791103631647804\nfeature 2: 38", "to": 1, "value": 0.24791103631647804, "width": 1}, {"color": "rgb(252,202,182)", "f1": 0.2063277212981196, "f2": 85, "from": 1, "label": 1, "title": "Edge: ef66e834-6b4a-47e5-b9cc-a6fd86e01e1a -\u003e 37248df1-919b-4a4c-826b-c5e1ca83aa43\nEdge Features:\nfeature 1: 0.2063277212981196\nfeature 2: 85", "to": 4, "value": 0.2063277212981196, "width": 1}, {"color": "rgb(252,160,131)", "f1": 0.3363660177506119, "f2": 88, "from": 1, "label": 1, "title": "Edge: ef66e834-6b4a-47e5-b9cc-a6fd86e01e1a -\u003e 6b3e0db3-66ef-4e26-921d-a8e2dd72373a\nEdge Features:\nfeature 1: 0.3363660177506119\nfeature 2: 88", "to": 8, "value": 0.3363660177506119, "width": 1}, {"color": "rgb(184,19,25)", "f1": 0.8036757095835962, "f2": 69, "from": 2, "label": 1, "title": "Edge: c0b93973-f767-4900-bb48-116bb52de717 -\u003e 525b8d1c-13a6-46d3-9c81-f86ac8e316b5\nEdge Features:\nfeature 1: 0.8036757095835962\nfeature 2: 69", "to": 0, "value": 0.8036757095835962, "width": 1}, {"color": "rgb(253,213,195)", "f1": 0.1718472898273059, "f2": 84, "from": 2, "label": 1, "title": "Edge: c0b93973-f767-4900-bb48-116bb52de717 -\u003e 37248df1-919b-4a4c-826b-c5e1ca83aa43\nEdge Features:\nfeature 1: 0.1718472898273059\nfeature 2: 84", "to": 4, "value": 0.1718472898273059, "width": 1}, {"color": "rgb(253,220,205)", "f1": 0.14856876413355014, "f2": 98, "from": 2, "label": 1, "title": "Edge: c0b93973-f767-4900-bb48-116bb52de717 -\u003e 6b3e0db3-66ef-4e26-921d-a8e2dd72373a\nEdge Features:\nfeature 1: 0.14856876413355014\nfeature 2: 98", "to": 8, "value": 0.14856876413355014, "width": 1}, {"color": "rgb(254,243,238)", "f1": 0.02426408543264147, "f2": 29, "from": 4, "label": 1, "title": "Edge: 37248df1-919b-4a4c-826b-c5e1ca83aa43 -\u003e 37248df1-919b-4a4c-826b-c5e1ca83aa43\nEdge Features:\nfeature 1: 0.02426408543264147\nfeature 2: 29", "to": 4, "value": 0.02426408543264147, "width": 1}, {"color": "rgb(193,21,27)", "f1": 0.7726396934817602, "f2": 54, "from": 4, "label": 1, "title": "Edge: 37248df1-919b-4a4c-826b-c5e1ca83aa43 -\u003e 5edf9ad5-ebe1-475a-b38d-acee3142cef6\nEdge Features:\nfeature 1: 0.7726396934817602\nfeature 2: 54", "to": 12, "value": 0.7726396934817602, "width": 1}, {"color": "rgb(254,229,218)", "f1": 0.1056599579441142, "f2": 80, "from": 4, "label": 1, "title": "Edge: 37248df1-919b-4a4c-826b-c5e1ca83aa43 -\u003e 86f39c78-79d2-4c63-b19c-c5cecb7d93df\nEdge Features:\nfeature 1: 0.1056599579441142\nfeature 2: 80", "to": 3, "value": 0.1056599579441142, "width": 1}, {"color": "rgb(246,89,63)", "f1": 0.5448481102438176, "f2": 55, "from": 5, "label": 1, "title": "Edge: 5de9d1f1-b773-4a62-a39e-84c7fac23124 -\u003e 525b8d1c-13a6-46d3-9c81-f86ac8e316b5\nEdge Features:\nfeature 1: 0.5448481102438176\nfeature 2: 55", "to": 0, "value": 0.5448481102438176, "width": 1}, {"color": "rgb(134,7,17)", "f1": 0.9264280565687931, "f2": 19, "from": 5, "label": 1, "title": "Edge: 5de9d1f1-b773-4a62-a39e-84c7fac23124 -\u003e 98249580-e3c8-4941-822a-c7d3ac5bf672\nEdge Features:\nfeature 1: 0.9264280565687931\nfeature 2: 19", "to": 9, "value": 0.9264280565687931, "width": 1}, {"color": "rgb(254,233,224)", "f1": 0.08130814093259964, "f2": 89, "from": 5, "label": 1, "title": "Edge: 5de9d1f1-b773-4a62-a39e-84c7fac23124 -\u003e 5edf9ad5-ebe1-475a-b38d-acee3142cef6\nEdge Features:\nfeature 1: 0.08130814093259964\nfeature 2: 89", "to": 12, "value": 0.08130814093259964, "width": 1}, {"color": "rgb(251,112,80)", "f1": 0.479694898774767, "f2": 86, "from": 6, "label": 1, "title": "Edge: 5b9f51d8-1dc3-4945-a414-392d0305296a -\u003e 37248df1-919b-4a4c-826b-c5e1ca83aa43\nEdge Features:\nfeature 1: 0.479694898774767\nfeature 2: 86", "to": 4, "value": 0.479694898774767, "width": 1}, {"color": "rgb(103,0,12)", "f1": 0.9877190044087085, "f2": 55, "from": 7, "label": 1, "title": "Edge: dcb30b81-f747-4858-aef9-69e06839e8c7 -\u003e 37248df1-919b-4a4c-826b-c5e1ca83aa43\nEdge Features:\nfeature 1: 0.9877190044087085\nfeature 2: 55", "to": 4, "value": 0.9877190044087085, "width": 1}, {"color": "rgb(254,231,220)", "f1": 0.09670401456586497, "f2": 14, "from": 7, "label": 1, "title": "Edge: dcb30b81-f747-4858-aef9-69e06839e8c7 -\u003e 6b3e0db3-66ef-4e26-921d-a8e2dd72373a\nEdge Features:\nfeature 1: 0.09670401456586497\nfeature 2: 14", "to": 8, "value": 0.09670401456586497, "width": 1}, {"color": "rgb(214,35,33)", "f1": 0.7035643562058305, "f2": 44, "from": 9, "label": 1, "title": "Edge: 98249580-e3c8-4941-822a-c7d3ac5bf672 -\u003e 37248df1-919b-4a4c-826b-c5e1ca83aa43\nEdge Features:\nfeature 1: 0.7035643562058305\nfeature 2: 44", "to": 4, "value": 0.7035643562058305, "width": 1}, {"color": "rgb(253,208,189)", "f1": 0.18863818213393047, "f2": 78, "from": 9, "label": 1, "title": "Edge: 98249580-e3c8-4941-822a-c7d3ac5bf672 -\u003e 6b3e0db3-66ef-4e26-921d-a8e2dd72373a\nEdge Features:\nfeature 1: 0.18863818213393047\nfeature 2: 78", "to": 8, "value": 0.18863818213393047, "width": 1}, {"color": "rgb(251,116,84)", "f1": 0.4703245180460409, "f2": 33, "from": 9, "label": 1, "title": "Edge: 98249580-e3c8-4941-822a-c7d3ac5bf672 -\u003e 525b8d1c-13a6-46d3-9c81-f86ac8e316b5\nEdge Features:\nfeature 1: 0.4703245180460409\nfeature 2: 33", "to": 0, "value": 0.4703245180460409, "width": 1}, {"color": "rgb(196,22,27)", "f1": 0.7671313705732461, "f2": 60, "from": 10, "label": 1, "title": "Edge: dede3320-c3a7-4450-83d5-42dbc03fb1c7 -\u003e 6b3e0db3-66ef-4e26-921d-a8e2dd72373a\nEdge Features:\nfeature 1: 0.7671313705732461\nfeature 2: 60", "to": 8, "value": 0.7671313705732461, "width": 1}, {"color": "rgb(252,181,154)", "f1": 0.2737197730469231, "f2": 62, "from": 11, "label": 1, "title": "Edge: afa09515-c380-4b16-b982-30ab3f860427 -\u003e 86f39c78-79d2-4c63-b19c-c5cecb7d93df\nEdge Features:\nfeature 1: 0.2737197730469231\nfeature 2: 62", "to": 3, "value": 0.2737197730469231, "width": 1}, {"color": "rgb(251,140,108)", "f1": 0.39877288258013577, "f2": 96, "from": 13, "label": 1, "title": "Edge: 69a216e6-220f-4228-b41b-e388c5950692 -\u003e 37248df1-919b-4a4c-826b-c5e1ca83aa43\nEdge Features:\nfeature 1: 0.39877288258013577\nfeature 2: 96", "to": 4, "value": 0.39877288258013577, "width": 1}, {"color": "rgb(248,97,68)", "f1": 0.5235837601269522, "f2": 13, "from": 14, "label": 1, "title": "Edge: 60815f93-ce37-4ab6-b5ae-5e7764d74e1b -\u003e ef66e834-6b4a-47e5-b9cc-a6fd86e01e1a\nEdge Features:\nfeature 1: 0.5235837601269522\nfeature 2: 13", "to": 1, "value": 0.5235837601269522, "width": 1}, {"color": "rgb(236,56,42)", "f1": 0.6313241845650126, "f2": 29, "from": 15, "label": 1, "title": "Edge: f3c30aac-aa41-4f4a-b4a8-e30ed102c3ac -\u003e 86f39c78-79d2-4c63-b19c-c5cecb7d93df\nEdge Features:\nfeature 1: 0.6313241845650126\nfeature 2: 29", "to": 3, "value": 0.6313241845650126, "width": 1}, {"color": "rgb(255,245,240)", "f1": 0.015077701488531714, "f2": 51, "from": 16, "label": 1, "title": "Edge: 17d87591-162f-459a-8f24-b88a9d2cc109 -\u003e 86f39c78-79d2-4c63-b19c-c5cecb7d93df\nEdge Features:\nfeature 1: 0.015077701488531714\nfeature 2: 51", "to": 3, "value": 0.015077701488531714, "width": 1}, {"color": "rgb(252,185,159)", "f1": 0.2656764241727625, "f2": 17, "from": 17, "label": 1, "title": "Edge: 9d33724e-31e7-4d22-94e0-60d64f839a32 -\u003e ef66e834-6b4a-47e5-b9cc-a6fd86e01e1a\nEdge Features:\nfeature 1: 0.2656764241727625\nfeature 2: 17", "to": 1, "value": 0.2656764241727625, "width": 1}, {"color": "rgb(252,181,154)", "f1": 0.27476920504960756, "f2": 74, "from": 18, "label": 1, "title": "Edge: 5f90ce3a-758e-47c5-a4be-07ec751f59f4 -\u003e 98249580-e3c8-4941-822a-c7d3ac5bf672\nEdge Features:\nfeature 1: 0.27476920504960756\nfeature 2: 74", "to": 9, "value": 0.27476920504960756, "width": 1}, {"color": "rgb(251,107,75)", "f1": 0.4970750166651776, "f2": 38, "from": 19, "label": 1, "title": "Edge: f110fe6c-5752-4133-9f5e-962e5593c29b -\u003e 37248df1-919b-4a4c-826b-c5e1ca83aa43\nEdge Features:\nfeature 1: 0.4970750166651776\nfeature 2: 38", "to": 4, "value": 0.4970750166651776, "width": 1}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": true
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+                  // if this network requires displaying the configure window,
+                  // put it in its div
+                  options.configure["container"] = document.getElementById("config");
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

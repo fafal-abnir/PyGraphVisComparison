@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "pygraphviscomparison"
+version = "0.1.0"
+description = ""
+authors = ["Vahid Shahrivari"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+networkx = "^3.2.1"
+matplotlib = "^3.8.2"
+jupyter = "^1.0.0"
+pyvis = "^0.3.2"
+ipysigma = "^0.24.2"
+jupyterlab = "^4.1.1"
+scipy = "^1.12.0"
+jaal = "^0.1.5"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
